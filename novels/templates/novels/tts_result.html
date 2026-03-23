@@ -1,0 +1,32 @@
+{% extends "novels/base.html" %}
+
+{% block title %}TTS Result: {{ title }}{% endblock %}
+
+{% block content %}
+<h1>Text-to-Speech Result</h1>
+<h2>{{ title }}</h2>
+<p class="meta">Voice: {{ voice_id }}</p>
+
+{% if success %}
+<p class="success-msg">Audio generated successfully.</p>
+
+<div class="audio-section">
+    <p>Use the player below to listen to the audio. The link is valid for one hour.</p>
+    <audio controls>
+        <source src="{{ audio_url }}" type="audio/mpeg">
+        Your browser does not support the HTML5 audio element.
+    </audio>
+    <p style="margin-top:14px;">
+        <a class="btn btn-accent" href="{{ audio_url }}" download>Download MP3</a>
+    </p>
+</div>
+{% else %}
+<p class="error-msg">Audio generation failed. Please check the server logs for details and try again.</p>
+{% endif %}
+
+<div class="action-links" style="margin-top:24px;">
+    <a class="btn btn-primary" href="{% url 'novel_tts' s3_key %}">Try Again</a>
+    <a class="btn btn-primary" href="{% url 'novel_detail' s3_key %}">Back to Novel</a>
+    <a class="btn btn-primary" href="{% url 'novel_list' %}">Back to List</a>
+</div>
+{% endblock %}

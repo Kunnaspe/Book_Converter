@@ -1,0 +1,91 @@
+{% extends "novels/base.html" %}
+
+{% block title %}Analysis: {{ title }}{% endblock %}
+
+{% block content %}
+<h1>Analysis: {{ title }}</h1>
+
+<div class="action-links" style="text-align:center;">
+    <a class="btn btn-primary" href="{% url 'novel_detail' s3_key %}">Read</a>
+    <a class="btn btn-accent" href="{% url 'novel_tts' s3_key %}">Text-to-Speech</a>
+    <a class="btn btn-primary" href="{% url 'novel_list' %}">Back to List</a>
+</div>
+
+<h2>Token Stats</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Metric</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Sentence Count</td>
+            <td>{{ stats.sentence_count }}</td>
+        </tr>
+        <tr>
+            <td>Total Tokens</td>
+            <td>{{ stats.total_tokens }}</td>
+        </tr>
+        <tr>
+            <td>Alphabetic Tokens</td>
+            <td>{{ stats.alpha_tokens }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Top 30, No Stopwords</h2>
+{% if top_words %}
+<table>
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Word</th>
+            <th>Frequency</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for word, count in top_words %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ word }}</td>
+            <td>{{ count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="empty-message">No word frequency data available.</p>
+{% endif %}
+
+<h2>Named Entities</h2>
+{% if entity_counts %}
+<table>
+    <thead>
+        <tr>
+            <th>Entity</th>
+            <th>Type</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entity in entity_counts %}
+        <tr>
+            <td>{{ entity.name }}</td>
+            <td>
+                <span class="entity-tag entity-{{ entity.type }}">{{ entity.type }}</span>
+            </td>
+            <td>{{ entity.count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="empty-message">No named entities found.</p>
+{% endif %}
+
+<div class="action-links" style="text-align:center; margin-top:28px;">
+    <a class="btn btn-accent" href="{% url 'novel_tts' s3_key %}">Generate Audio for This Novel</a>
+</div>
+{% endblock %}

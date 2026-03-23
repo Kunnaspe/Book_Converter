@@ -1,0 +1,29 @@
+{% extends "novels/base.html" %}
+{% load humanize %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div style="text-align:center;">
+<h1>{{ title }}</h1>
+
+<div style="display:inline-block; border:2px solid #0d3b66; border-radius:6px; padding:10px 28px; margin:12px auto;">
+    <span style="font-size:1.1rem; font-weight:bold; color:#0d3b66;">{{ char_count|intcomma }} characters total</span>
+</div>
+
+<div class="action-links" style="margin-top:16px;">
+    <a class="btn btn-secondary" href="{% url 'novel_analyze' s3_key %}">Analyze</a>
+    <a class="btn btn-accent" href="{% url 'novel_tts' s3_key %}">Text-to-Speech</a>
+    <a class="btn btn-primary" href="{% url 'novel_list' %}">Back to List</a>
+</div>
+
+<h2>Text Preview</h2>
+<p class="meta">Showing the first 2k characters.</p>
+</div>
+<pre>{{ preview }}</pre>
+
+<div class="action-links" style="text-align:center;">
+    <a class="btn btn-secondary" href="{% url 'novel_analyze' s3_key %}">Analyze This Novel</a>
+    <a class="btn btn-accent" href="{% url 'novel_tts' s3_key %}">Generate Audio</a>
+</div>
+{% endblock %}

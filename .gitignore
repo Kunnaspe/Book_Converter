@@ -1,0 +1,16 @@
+.env
+.claude/
+.idea/
+*.txt
+*.pyc
+__pycache__/
+db.sqlite3
+staticfiles/
+venv/
+*.pem
+*.mp3
+nltk_data/
+*.egg-info/
+dist/
+build/
+.DS_Store

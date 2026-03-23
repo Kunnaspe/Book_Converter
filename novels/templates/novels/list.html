@@ -1,0 +1,37 @@
+{% extends "novels/base.html" %}
+
+{% block title %}Novel List{% endblock %}
+
+{% block content %}
+<h1>Novels</h1>
+<p class="meta">My novels in the S3 bucket.</p>
+
+{% if files %}
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Size (KB)</th>
+            <th>Date Modified</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for file in files %}
+        <tr>
+            <td>{{ file.title }}</td>
+            <td>{{ file.size_kb|floatformat:0 }}</td>
+            <td>{{ file.last_modified|date:"Y-m-d" }}</td>
+            <td style="display:flex; flex-direction:column; gap:5px; padding:8px 14px;">
+                <a class="btn btn-accent" href="{% url 'novel_tts' file.key %}">Text to Speech</a>
+                <a class="btn btn-primary" href="{% url 'novel_detail' file.key %}">Read</a>
+                <a class="btn btn-secondary" href="{% url 'novel_analyze' file.key %}">Analyze</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="empty-message">No novels found in the S3 bucket under the raw/ prefix.</p>
+{% endif %}
+{% endblock %}

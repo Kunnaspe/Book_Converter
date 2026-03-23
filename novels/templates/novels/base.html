@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Paul's Analytics for TESU Final Project{% endblock %}</title>
+    <style>
+        /* Georgia body text for a clean readable feel */
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            background-color: #eaf4fb;
+            color: #1b2a3b;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Constrain content width to 960px so long lines stay readable */
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px 24px;
+        }
+
+        /* Navy-to-teal gradient nav bar */
+        nav {
+            background: linear-gradient(90deg, #0d3b66 0%, #1a7a8a 100%);
+            padding: 14px 24px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-family: Arial, sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 0.06em;
+        }
+
+        nav a:hover {
+            color: #a8e6ef;
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+            color: #0d3b66;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            margin-top: 32px;
+            margin-bottom: 10px;
+            color: #0d3b66;
+            border-bottom: 2px solid #1a7a8a;
+            padding-bottom: 4px;
+            text-align: center;
+        }
+
+        /* Style all tables the same way so data pages look consistent */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            background: #ffffff;
+            box-shadow: 0 1px 6px rgba(13,59,102,0.10);
+        }
+
+        th {
+            background: linear-gradient(90deg, #0d3b66 0%, #1a7a8a 100%);
+            color: #ffffff;
+            padding: 10px 14px;
+            text-align: left;
+            font-family: Arial, sans-serif;
+            font-size: 0.88rem;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 9px 14px;
+            border-bottom: 1px solid #e8e4dc;
+            font-size: 0.95rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #d6eef5;
+        }
+
+        /* I use anchor tags styled as buttons for actions so they look
+           clickable without requiring JavaScript */
+        a.btn {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-family: Arial, sans-serif;
+            font-size: 0.82rem;
+            text-decoration: none;
+            margin-right: 4px;
+            font-weight: bold;
+        }
+
+        a.btn-primary {
+            background-color: #0d3b66;
+            color: #ffffff;
+        }
+
+        a.btn-primary:hover {
+            background-color: #1a5e8a;
+        }
+
+        a.btn-secondary {
+            background-color: #1a7a8a;
+            color: #ffffff;
+        }
+
+        a.btn-secondary:hover {
+            background-color: #145f6e;
+        }
+
+        a.btn-accent {
+            background-color: #0e8c6a;
+            color: #ffffff;
+        }
+
+        a.btn-accent:hover {
+            background-color: #096b50;
+        }
+
+        /* I style the text preview pre block so it scrolls horizontally
+           and uses a monospace font for readability */
+        pre {
+            background: #e0f2f7;
+            border: 1px solid #1a7a8a;
+            padding: 16px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            border-radius: 4px;
+        }
+
+        /* I color entity tags differently by type so the user can scan the
+           named entity table at a glance */
+        .entity-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-family: Arial, sans-serif;
+            font-size: 0.78rem;
+            font-weight: bold;
+            letter-spacing: 0.04em;
+        }
+
+        .entity-PERSON       { background-color: #bbdefb; color: #0d47a1; }
+        .entity-ORGANIZATION { background-color: #c8e6c9; color: #1b5e20; }
+        .entity-GPE          { background-color: #ffe0b2; color: #e65100; }
+        .entity-LOCATION     { background-color: #f3e5f5; color: #4a148c; }
+        .entity-FACILITY     { background-color: #fce4ec; color: #880e4f; }
+        .entity-GSP          { background-color: #fff9c4; color: #f57f17; }
+        .entity-OTHER        { background-color: #eceff1; color: #37474f; }
+
+        .empty-message {
+            color: #888;
+            font-style: italic;
+            margin-top: 20px;
+        }
+
+        .meta {
+            font-family: Arial, sans-serif;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .action-links {
+            margin-top: 20px;
+        }
+
+        .action-links a {
+            margin-right: 12px;
+        }
+
+        form.tts-form {
+            background: #ffffff;
+            padding: 24px;
+            border: 1px solid #d0c8b8;
+            border-radius: 6px;
+            max-width: 460px;
+            margin-top: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+        }
+
+        form.tts-form label {
+            display: block;
+            font-family: Arial, sans-serif;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #1a1a2e;
+        }
+
+        form.tts-form select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #c0b8a8;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-family: Arial, sans-serif;
+            background: #faf8f5;
+            margin-bottom: 18px;
+        }
+
+        form.tts-form button {
+            background-color: #0d3b66;
+            color: #ffffff;
+            border: none;
+            padding: 10px 22px;
+            font-size: 0.95rem;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        form.tts-form button:hover {
+            background-color: #1a5e8a;
+        }
+
+        .audio-section {
+            margin-top: 24px;
+            background: #ffffff;
+            padding: 20px;
+            border: 1px solid #d0c8b8;
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+        }
+
+        .audio-section audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .success-msg {
+            color: #2e7d32;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+        }
+
+        .error-msg {
+            color: #c62828;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'novel_list' %}">Paul's Analytics for TESU Final Project</a>
+    </nav>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
