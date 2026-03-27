@@ -4,19 +4,17 @@ from django.conf import settings
 
 from novels.s3_utils import upload_binary_to_s3
 
-# Cap the text length because Polly's synchronous API accepts at most
-# 3000 characters of input for neural voices
+# caps the text length because polly's API accepts at most3k characters of input 
 MAX_TEXT_LENGTH = 3000
 
 
 def text_to_mp3_polly(text, s3_output_key, voice_id='Joanna', engine='neural'):
-    """Send up to MAX_TEXT_LENGTH characters of text to Amazon Polly,
-    receive the MP3 audio stream, and upload it to S3 at s3_output_key.
+    """send up to max length characters of text to polly,
+    receive the MP3 stream, and uploads it to S3 at s3_output_key.
     Returns a tuple of (success, s3_output_key) where success is a bool
-    so the view can decide what template to render without catching exceptions."""
+    so the view can decide what template to render without exceptions"""
     try:
-        # Truncate rather than raise an error so the user still gets
-        # partial audio instead of a broken page
+        # truncate rather than raise an error so the user still gets partial audio instead of a broken page
         truncated_text = text[:MAX_TEXT_LENGTH]
 
         polly_client = boto3.client(
@@ -33,8 +31,7 @@ def text_to_mp3_polly(text, s3_output_key, voice_id='Joanna', engine='neural'):
             Engine=engine,
         )
 
-        # Read the entire audio stream into memory before uploading
-        # because the streaming body is not seekable
+        # read the entire audio stream into memory before uploading because the streaming body is not seekable
         audio_data = response['AudioStream'].read()
 
         success = upload_binary_to_s3(
@@ -58,10 +55,10 @@ def text_to_mp3_polly(text, s3_output_key, voice_id='Joanna', engine='neural'):
 
 
 def check_polly_task_status(task_id):
-    """Check the status of an asynchronous Polly speech synthesis task
+    """checks the status of an asynchronous olly speech synthesis task
     by task ID and return a dict with status and output_uri keys.
     The synchronous API is used in this project so this function is provided
-    for completeness and future use with long-form synthesis tasks."""
+    for completeness"""
     try:
         polly_client = boto3.client(
             'polly',
