@@ -1,8 +1,7 @@
 from django.urls import path
 from novels import views
 
-# Use the path:s3_key converter so keys with forward slashes such as
-# raw/moby_dick.txt are captured correctly as a single argument
+# Use the path:s3_key converter so keys with forward slashes such as moby_dick.txt are captured correctly
 urlpatterns = [
     path('', views.novel_list, name='novel_list'),
     path('novel/<path:s3_key>/analyze/', views.novel_analyze, name='novel_analyze'),
