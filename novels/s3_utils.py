@@ -2,7 +2,7 @@ import boto3
 from botocore.exceptions import ClientError
 from django.conf import settings
 
-# Keep the bucket name in one place so every function below picks it up from settings rather than hardcoding it
+# keep the bucket name in one place so every function below picks it up from settings rather than hardcoding it
 BUCKET_NAME = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', 'paul-final-bucket')
 
 
