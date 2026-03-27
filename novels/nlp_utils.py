@@ -6,8 +6,7 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
 from nltk import ne_chunk, pos_tag
 
-# download the required NLTK data packages on first import so the app
-# works on a fresh server without a separate setup step
+# download the required NLTK data packages on first import so the app works on a fresh server without a separate setup 
 for _pkg in ('punkt', 'punkt_tab', 'stopwords', 'averaged_perceptron_tagger',
              'averaged_perceptron_tagger_eng', 'maxent_ne_chunker',
              'maxent_ne_chunker_tab', 'words'):
@@ -16,8 +15,7 @@ for _pkg in ('punkt', 'punkt_tab', 'stopwords', 'averaged_perceptron_tagger',
     except Exception:
         pass
 
-# compile the Gutenberg header and footer patterns once at module level
-# so they are not recompiled on every call
+# compile the Gutenberg header and footer patterns once at module level so they are not recompiled on every call
 _HEADER_PATTERN = re.compile(
     r'^\*{3}\s*START OF (THE|THIS) PROJECT GUTENBERG.*?\*{3}',
     re.IGNORECASE | re.DOTALL,
@@ -31,7 +29,7 @@ _FOOTER_PATTERN = re.compile(
 def strip_gutenberg_header_footer(text):
     """remove the standard Project gutenberg header and footer from a text
     string and then return the cleaned body so NLP runs only on the actual novel
-    content rather than the base template."""
+    content"""
     # split on the START marker and take everything after it
     start_match = re.search(
         r'\*{3}\s*START OF (THE|THIS) PROJECT GUTENBERG[^\*]*\*{3}',
@@ -41,7 +39,7 @@ def strip_gutenberg_header_footer(text):
     if start_match:
         text = text[start_match.end():]
 
-    # Then cut off anything after the END marker
+    # cut off anything after the END marker
     end_match = re.search(
         r'\*{3}\s*END OF (THE|THIS) PROJECT GUTENBERG[^\*]*\*{3}',
         text,
@@ -76,10 +74,10 @@ def tokenize_text(text):
 
 
 def word_frequency(text, top_n=30, exclude_stopwords=True):
-    """Count word frequencies across the text and return the top_n words
+    """count word frequencies across the text and return the top_n words
     as a list of (word, count) tuples sorted from most to least frequent.
-    Lowercases everything and optionally strips English stopwords so common
-    function words do not dominate the results."""
+    Lowercases everything and optionally strips english stopwords so common
+    function words do not dominate the results"""
     try:
         tokens = word_tokenize(text.lower())
         alpha_tokens = [t for t in tokens if t.isalpha()]
@@ -94,10 +92,10 @@ def word_frequency(text, top_n=30, exclude_stopwords=True):
 
 
 def extract_named_entities(text, max_sentences=100):
-    """Run NLTK named entity recognition on up to max_sentences sentences
-    and return a dict mapping entity type labels such as PERSON and
-    ORGANIZATION to lists of entity name strings. Caps the sentence count
-    to keep response times reasonable for very long novels."""
+    """run NLTK named entity recognition on up to max_sentences sentences
+    and return a dict mapping entity type labels such as persn and
+    org to lists of entity name strings. Caps the sentence count
+    to keep response times reasonable for very long novels"""
     entities = {}
     try:
         sentences = sent_tokenize(text)[:max_sentences]
@@ -116,14 +114,13 @@ def extract_named_entities(text, max_sentences=100):
 
 
 def extract_entity_counts(text, max_sentences=100):
-    """Extract named entities and then count how often each unique name
+    """extract named entities and then counts how often each unique name
     appears across the sentences. Returns a list of dicts each with name,
     type and count keys sorted by count descending so the most prominent
-    characters and places appear first in the template."""
+    characters and places appear first"""
     try:
         raw = extract_named_entities(text, max_sentences=max_sentences)
-        # Build a flat counter keyed by (name, type) so duplicates across
-        # sentence boundaries are merged correctly
+        # build a flat counter keyed by (name, type) so duplicates across sentence boundaries are merged correctly
         counter = Counter()
         for entity_type, names in raw.items():
             for name in names:
@@ -140,9 +137,9 @@ def extract_entity_counts(text, max_sentences=100):
 
 
 def analyze_novel(text, top_n_words=30, ner_sentences=100):
-    """Run the full NLP pipeline on the given text and return one dict
+    """run the full NLP pipeline on the given text and return one dict
     that contains tokenization stats, word frequency and entity counts so
-    views only need a single call to get everything for the analyze page."""
+    views only need a single call to get everything for the analyze page"""
     try:
         cleaned = strip_gutenberg_header_footer(text)
         stats = tokenize_text(cleaned)
