@@ -2,14 +2,13 @@ import boto3
 from botocore.exceptions import ClientError
 from django.conf import settings
 
-# Keep the bucket name in one place so every function below picks it
-# up from settings rather than hardcoding it
+# Keep the bucket name in one place so every function below picks it up from settings rather than hardcoding it
 BUCKET_NAME = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', 'paul-final-bucket')
 
 
 def get_s3_client():
-    """Create and return a boto3 S3 client using the credentials stored
-    in Django settings so callers do not have to build the client themselves."""
+    """create and return a boto3 S3 client using the credentials stored
+    in django settings so users don't have to build the client themselves"""
     return boto3.client(
         's3',
         aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
@@ -19,10 +18,10 @@ def get_s3_client():
 
 
 def list_s3_files(prefix='raw/'):
-    """List all objects in the bucket under the given prefix and return
+    """list all objects in the bucket under the given prefix and return
     a list of dicts with key, size_kb and last_modified for each file.
-    Returns an empty list if anything goes wrong so callers can show a
-    friendly empty state instead of crashing."""
+    Returns an empty list if anything goes wrong so users can show a
+    friendly empty state instead of it crashing"""
     try:
         client = get_s3_client()
         paginator = client.get_paginator('list_objects_v2')
@@ -31,7 +30,7 @@ def list_s3_files(prefix='raw/'):
         for page in pages:
             for obj in page.get('Contents', []):
                 key = obj['Key']
-                # Skip the prefix directory entry itself since it is not a real file
+                # skip the prefix directory entry itself since it is not a real file
                 if key == prefix:
                     continue
                 files.append({
@@ -50,9 +49,9 @@ def list_s3_files(prefix='raw/'):
 
 
 def read_s3_text_file(s3_key):
-    """Download a text file from S3 by key and return its contents as a
-    Python string decoded as UTF-8. Returns None if the file does not exist
-    or any other error occurs so callers can show a 404-style message."""
+    """downloads a text file from S3 by key and return its contents as a
+    Python string decoded as UTF 8. Returns none if the file does not exist
+    or any other error occurs so callers can show a 404 message"""
     try:
         client = get_s3_client()
         response = client.get_object(Bucket=BUCKET_NAME, Key=s3_key)
@@ -68,9 +67,9 @@ def read_s3_text_file(s3_key):
 
 
 def upload_binary_to_s3(binary_data, s3_key, content_type='audio/mpeg'):
-    """Upload raw binary data to S3 at the given key with the specified
-    content type. Returns True on success and False on failure so callers
-    can decide what to do without catching exceptions themselves."""
+    """upload raw binary data to S3 at the given key with the specified
+    content type. Returns "true" on success and False on failure so callers
+    can decide what to do without catching exceptions themselves"""
     try:
         client = get_s3_client()
         client.put_object(
@@ -90,9 +89,9 @@ def upload_binary_to_s3(binary_data, s3_key, content_type='audio/mpeg'):
 
 
 def generate_presigned_url(s3_key, expiration=3600):
-    """Generate a presigned GET URL for the given S3 key so the browser
-    can play or download the file directly without exposing credentials.
-    Returns None if the URL cannot be generated."""
+    """generate a presigned GET URL for the given S3 key so the browser
+    can play or downloads the file directly without exposing my credentials.
+    Returns "none" if the URL cannot be generated"""
     try:
         client = get_s3_client()
         url = client.generate_presigned_url(
